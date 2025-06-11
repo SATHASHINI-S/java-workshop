@@ -15,7 +15,7 @@ public class OutOfRange {
 
         for(int i=0;i < n; i++){
             if(arr[i]<18 || arr[i]>28){
-                System.out.println(arr[i]+ "OUT OF RANGE");
+                System.out.println(arr[i]+ " OUT OF RANGE");
             }
         }
 
