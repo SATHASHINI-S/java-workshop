@@ -1,6 +1,7 @@
 package com.temperaturedata.beans;
 
 public class Location {
+    private Building[] buildings;
     private String doorNo;
     private String street;
     private String area;

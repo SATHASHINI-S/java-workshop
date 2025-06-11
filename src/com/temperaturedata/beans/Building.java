@@ -1,6 +1,7 @@
 package com.temperaturedata.beans;
 
-public class Buildings {
+public class Building {
+    private Floor[] floors;
     private String colour;
     private String shape;
     private String name;
