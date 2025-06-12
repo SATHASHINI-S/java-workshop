@@ -12,7 +12,7 @@ public class Location {
     private String country;
     private double longtitute;
     private double latitute;
-    private int numberOfBuilding;
+
 
 
 }
