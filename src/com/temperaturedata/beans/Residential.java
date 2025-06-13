@@ -1,6 +1,6 @@
 package com.temperaturedata.beans;
 
-public class Residential extends Building{
+public final class Residential extends Building{
     String type;
 
 

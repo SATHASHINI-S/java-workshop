@@ -1,6 +1,7 @@
 package com.temperaturedata.beans;
 
-public class interface Sensor {
+public interface Sensor {
     public float getReading();
+    public float getReading(ReadingUnit unit);
 
 }
