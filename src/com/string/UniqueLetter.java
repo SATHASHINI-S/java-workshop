@@ -17,9 +17,6 @@ public class UniqueLetter {
             String word = splitTheParagraph[i];
             wordCount.put(word,wordCount.getOrDefault(word,0)+1);
 
-
-
-
         }
 
         for(int i = 0 ; i < findLength; i++ ){
