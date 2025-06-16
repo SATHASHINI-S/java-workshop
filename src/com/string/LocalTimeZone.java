@@ -9,8 +9,7 @@ public class LocalTimeZone {
         LocalTime timeNow = LocalTime.of(4,46);
         int minutes = LocalTime.now().getMinute();
         int hours = LocalTime.now().getHour();
-        System.out.println((minutes- timeNow.getMinute())+" minutes "+(hours - timeNow.getHour()
-        ));
+        System.out.println((minutes- timeNow.getMinute())+" minutes "+(hours - timeNow.getHour()));
 
     }
 }
