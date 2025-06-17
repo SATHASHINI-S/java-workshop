@@ -1,12 +1,26 @@
 package com.myjava.practice;
 
+/**
+ * This class remove space and provide the word count of the string
+ */
 public class StringWordCounter {
+    private final String SPACE = " ";
+
+    /**
+     *
+     * @param input String which needs to be splited into words.
+     * @return count
+     */
     public int count(String input){
-        String[] words = input.split(" ");
+
         int counter = 0;
-        for(String word:words){
-            if(!word.equals("")){
-                counter++;
+        if(input!=null){
+            String[] words = input.split(SPACE);
+
+            for(String word:words){
+                if(!word.equals("")){
+                    counter++;
+                }
             }
         }
         return counter;

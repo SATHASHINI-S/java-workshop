@@ -14,6 +14,14 @@ public class StringCounterTest {
     }
 
     @Test
+    public void stringCounterBig(){
+        StringWordCounter wordCounter = new StringWordCounter();
+        int count = wordCounter.count("String is immutable object write test fix compilation error run see it");
+        Assertions.assertEquals(12,count);
+    }
+
+
+    @Test
 
     public void stringCounterwithoutSpace(){
         StringWordCounter wordCounter = new StringWordCounter();
@@ -58,5 +66,21 @@ public class StringCounterTest {
         int count = wordCounter.count("String,\"'@#$%^\" Immutable");
         Assertions.assertEquals(2,count);
     }
+
+    @Test
+    public void stringCounterwithEmpty(){
+        StringWordCounter wordCounter = new StringWordCounter();
+        int count = wordCounter.count("");
+        Assertions.assertEquals(0,count);
+    }
+
+    @Test
+    public void stringCounterwithNull(){
+        StringWordCounter wordCounter = new StringWordCounter();
+        int count = wordCounter.count(null);
+        Assertions.assertEquals(0,count);
+    }
+
+
 
 }
