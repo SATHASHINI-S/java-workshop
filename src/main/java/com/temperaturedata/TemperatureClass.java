@@ -58,8 +58,8 @@ public class TemperatureClass {
         }
 
         Location location = new Location();
-        location.setArea("Oothakadai");
-        location.setCity("Madurai");
+        location.setArea("MGR");
+        location.setCity("Coimbatore");
         location.setCountry("India");
         location.setLatitute(1236.2548);
         location.setLongtitute(1458.36);
@@ -71,27 +71,23 @@ public class TemperatureClass {
             objectOutput.writeObject(location);
             fileOutput.close();
             objectOutput.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
 
-        Location location1 = new Location();
-        location1.setArea("Oothakadai");
-        location1.setCity("Madurai");
-        location1.setCountry("India");
-        location1.setLatitute(1236.2548);
-        location1.setLongtitute(1458.36);
-        location1.setStreet("Neethi Street");
-        location1.setPincode("621 715");
 
-        try {
-            FileOutputStream outputSt = new FileOutputStream("location1.txt");
-            ObjectOutputStream objectOut = new ObjectOutputStream(outputSt);
+            Location location1 = new Location();
+            location1.setArea("vadapalani");
+            location1.setCity("Chennai");
+            location1.setCountry("India");
+            location1.setLatitute(1236.2548);
+            location1.setLongtitute(1458.36);
+            location1.setStreet("Neethi Street");
+            location1.setPincode("621 715");
+
+
+            fileOutput = new FileOutputStream("location1.txt");
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOutput);
             objectOut.writeObject(location1);
-            outputSt.close();
+            fileOutput.close();
             objectOut.close();
 
         } catch (FileNotFoundException e) {
