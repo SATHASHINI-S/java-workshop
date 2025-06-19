@@ -1,7 +1,11 @@
 package com.temperaturedata.beans;
 
+import com.exception.FindBuildingLength;
+
+import java.util.List;
+
 public abstract sealed class Building permits Commercial, Residential {
-    private Floor[] floors;
+    private List<Floor> floors;
     private String colour;
     private String shape;
     private String name;
@@ -9,11 +13,15 @@ public abstract sealed class Building permits Commercial, Residential {
     private int noOfFloors;
     private double height;
 
-    public Floor[] getFloors() {
+
+
+
+
+    public List<Floor> getFloors() {
         return floors;
     }
 
-    public void setFloors(Floor[] floors) {
+    public void setFloors(List<Floor> floors) {
         this.floors = floors;
     }
 
@@ -53,7 +61,10 @@ public abstract sealed class Building permits Commercial, Residential {
         return noOfFloors;
     }
 
-    public void setNoOfFloors(int noOfFloors) {
+    public void setNoOfFloors(int noOfFloors) throws FindBuildingLength {
+        if(noOfFloors>100){
+            throw new FindBuildingLength("Out of Range");
+        }
         this.noOfFloors = noOfFloors;
     }
 

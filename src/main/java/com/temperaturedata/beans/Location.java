@@ -1,6 +1,7 @@
 package com.temperaturedata.beans;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Location implements Serializable {
 
@@ -85,7 +86,7 @@ public class Location implements Serializable {
         this.latitute = latitute;
     }
 
-    private Building[] buildings;
+    private List<Building> buildings;
     private String doorNo;
     private String street;
     private String area;
