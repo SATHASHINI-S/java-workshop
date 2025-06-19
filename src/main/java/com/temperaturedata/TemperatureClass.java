@@ -7,6 +7,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public class TemperatureClass {
@@ -37,6 +38,14 @@ public class TemperatureClass {
         cbe.setBuildings(noOfCbe);
         cbe.setBuildings(noOfCbe);
 
+        Floor newfloor = floor(1,"floor 1");
+        Floor secondFloor = floor(1,"floor 1");
+
+        Set<Floor> floors = Set.of(newfloor,secondFloor);
+        creator.setFloors(floors);
+
+
+
 
 
     }
@@ -52,6 +61,7 @@ public class TemperatureClass {
         location.setState(state);
         location.setCountry(country);
         location.setPincode(pincode);
+        return location;
     }
 
     private static Commercial createComercial(String colour, String shape, String name, int bulidingNumber, double height){
@@ -61,6 +71,15 @@ public class TemperatureClass {
         commercial.setName(name);
         commercial.setBulidingNumber(bulidingNumber);
         commercial.setHeight(height);
+        return commercial;
+
+    }
+
+    private static Floor floor(int floorNumber, String name){
+        Floor floor = new Floor();
+        floor.setFloorNumber(floorNumber);
+        floor.setName(name);
+        return floor;
 
     }
 

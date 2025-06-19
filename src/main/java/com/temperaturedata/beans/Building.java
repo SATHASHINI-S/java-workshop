@@ -3,9 +3,10 @@ package com.temperaturedata.beans;
 import com.exception.FindBuildingLength;
 
 import java.util.List;
+import java.util.Set;
 
 public abstract sealed class Building permits Commercial, Residential {
-    private List<Floor> floors;
+    private Set<Floor> floors;
     private String colour;
     private String shape;
     private String name;
@@ -28,11 +29,11 @@ public abstract sealed class Building permits Commercial, Residential {
 
 
 
-    public List<Floor> getFloors() {
+    public Set<Floor> getFloors() {
         return floors;
     }
 
-    public void setFloors(List<Floor> floors) {
+    public void setFloors(Set<Floor> floors) {
         this.floors = floors;
     }
 
