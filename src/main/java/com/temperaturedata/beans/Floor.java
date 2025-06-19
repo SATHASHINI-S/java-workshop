@@ -1,6 +1,7 @@
 package com.temperaturedata.beans;
 
 import java.util.List;
+import java.util.Set;
 
 public class Floor {
     public List<Sensor> getSensors() {
@@ -34,6 +35,16 @@ public class Floor {
     public void setFloorNumber(int floorNumber) {
         this.floorNumber = floorNumber;
     }
+
+    public List<Zone> getZones() {
+        return zones;
+    }
+
+    public void setZones(List<Zone> zones) {
+        this.zones = zones;
+    }
+
+    private List<Zone> zones;
 
     private List<Sensor> sensors;
     private String name;

@@ -9,9 +9,8 @@ public class StackExample {
         books.add("Tamil Book");
         books.add("Ponniyen Selvan");
         System.out.println(books.pop());
-        System.out.println(books.pop());
-        System.out.println(books.pop());
-        System.out.println(books.peek());
+
+
 
 
         System.out.println(books);

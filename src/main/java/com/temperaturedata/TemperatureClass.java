@@ -5,13 +5,14 @@ import com.temperaturedata.beans.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public class TemperatureClass {
     public static void main(String[] args) {
+
+//      Organization must be in List
+
         Location chennai = createLocation("4/2","North Street","Thambaram","Chennai","Chennai","Tamil Nadu","611100","India");
         Location cbe = createLocation("001","MGR STREET","SARAVANAMPATI","COIMBATORE","CBE","Tamil Nadu", "621114","India");
         List<Location> noOfObject = new ArrayList<>();
@@ -20,32 +21,49 @@ public class TemperatureClass {
         Organization organization = new Organization();
         organization.setLocations(noOfObject);
 
+//      Building should be in TreeSet
+
         Commercial navigator = createComercial("WhiteGlass","Butterfly","Navigator",001,12);
         Commercial creator = createComercial("LiteShadeOfBrown","Rectangle","Creator",02,16);
         Commercial inventor = createComercial("WhiteGlass","Butterfly","Navigator",001,12);
         Commercial innovator = createComercial("LiteShadeOfBrown","Rectangle","Creator",02,16);
 
-
-        List<Building> noOfCommercial = new ArrayList<>();
+//        Set<Building> noOfCommercial = new HashSet<>();
+//        TreeSet<Building> noOfCommercial = new TreeSet<>(Comparator.comparing(navigator,creator));
+//        noOfCommercial.add(navigator);
+//        noOfCommercial.add(creator);
+        TreeSet<Building> noOfCommercial = new TreeSet<>(Comparator.comparing(Building::getName));
         noOfCommercial.add(navigator);
         noOfCommercial.add(creator);
         chennai.setBuildings(noOfCommercial);
         chennai.setBuildings(noOfCommercial);
 
-        List<Building> noOfCbe = new ArrayList<>();
-        noOfCbe.add(inventor);
-        noOfCbe.add(innovator);
+//        Set<Building> noOfCbe = new HashSet<>();
+//        TreeSet<Building> noOfCbe = new TreeSet<>(Set.of(inventor,innovator)) ;
+//        noOfCbe.add(inventor);
+//        noOfCbe.add(innovator);
+        TreeSet<Building> noOfCbe = new TreeSet<>(Comparator.comparing(Building::getName));
+        noOfCbe.addAll(Set.of(inventor, innovator));
         cbe.setBuildings(noOfCbe);
         cbe.setBuildings(noOfCbe);
 
+
+
         Floor newfloor = floor(1,"floor 1");
-        Floor secondFloor = floor(1,"floor 1");
+        Floor secondFloor = floor(2,"floor 2");
 
         Set<Floor> floors = Set.of(newfloor,secondFloor);
         creator.setFloors(floors);
 
 
-
+        Zone newZoneOne = zoneValue("Technical Zone",001,3,9,"Working");
+        Zone newZoneTwo = zoneValue("Management Zone",002,3,9,"Working");
+        Zone newZoneThree = zoneValue("Production Zone",003,3,9,"Working");
+        List<Zone> zoneList = new ArrayList<>();
+        zoneList.add(newZoneOne);
+        zoneList.add(newZoneTwo);
+        zoneList.add(newZoneThree);
+        newfloor.setZones(zoneList);
 
 
     }
@@ -81,6 +99,15 @@ public class TemperatureClass {
         floor.setName(name);
         return floor;
 
+    }
+
+    private static Zone zoneValue(String name, int zoneNumber, int noOfZone, int noOfSensor, String type){
+        Zone zone = new Zone();
+        zone.setName(name);
+        zone.setZoneNumber(zoneNumber);
+        zone.setNoOfZone(noOfZone);
+        zone.setType(type);
+        return zone;
     }
 
 

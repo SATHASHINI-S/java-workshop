@@ -4,8 +4,10 @@ import com.exception.FindBuildingLength;
 
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
-public abstract sealed class Building permits Commercial, Residential {
+public abstract sealed class Building permits Commercial, Residential   {
     private Set<Floor> floors;
     private String colour;
     private String shape;
@@ -15,15 +17,15 @@ public abstract sealed class Building permits Commercial, Residential {
     private double height;
 
 
-    public List<Building> getBuildings() {
+    public TreeSet<Building> getBuildings() {
         return buildings;
     }
 
-    public void setBuildings(List<Building> buildings) {
+    public void setBuildings(TreeSet<Building> buildings) {
         this.buildings = buildings;
     }
 
-    private List<Building> buildings;
+    private TreeSet<Building> buildings;
 
 
 

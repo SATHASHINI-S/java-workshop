@@ -2,8 +2,8 @@ package com.temperaturedata.beans;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class Organization implements Serializable {
     private String name;

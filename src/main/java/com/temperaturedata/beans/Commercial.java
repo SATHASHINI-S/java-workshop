@@ -2,7 +2,7 @@ package com.temperaturedata.beans;
 
 import java.util.Calendar;
 
-public final class Commercial extends Building {
+public final class Commercial extends Building{
     private String type;
     private Calendar openTime;
     private Calendar closeTime;
