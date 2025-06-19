@@ -3,6 +3,7 @@ package com.temperaturedata.beans;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 public class Organization implements Serializable {
     private String name;
@@ -11,7 +12,17 @@ public class Organization implements Serializable {
     private LocalDate dateOfInitiation;
     private String email;
     private String phone;
+
+    public List<Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<Location> locations) {
+        this.locations = locations;
+    }
+
     private String ceo;
+    private List<Location> locations;
 
     public String getName() {
         return name;

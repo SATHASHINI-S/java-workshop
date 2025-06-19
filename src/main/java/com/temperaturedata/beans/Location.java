@@ -86,6 +86,14 @@ public class Location implements Serializable {
         this.latitute = latitute;
     }
 
+    public List<Building> getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(List<Building> buildings) {
+        this.buildings = buildings;
+    }
+
     private List<Building> buildings;
     private String doorNo;
     private String street;

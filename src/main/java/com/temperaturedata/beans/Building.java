@@ -14,6 +14,17 @@ public abstract sealed class Building permits Commercial, Residential {
     private double height;
 
 
+    public List<Building> getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(List<Building> buildings) {
+        this.buildings = buildings;
+    }
+
+    private List<Building> buildings;
+
+
 
 
 
