@@ -8,7 +8,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public abstract sealed class Building permits Commercial, Residential   {
-    private Set<Floor> floors;
+    private TreeSet<Floor> floors;
     private String colour;
     private String shape;
     private String name;
@@ -17,25 +17,21 @@ public abstract sealed class Building permits Commercial, Residential   {
     private double height;
 
 
-    public TreeSet<Building> getBuildings() {
-        return buildings;
-    }
+//    public TreeSet<Building> getBuildings() {
+//        return buildings;
+//    }
+//
+//    public void setBuildings(TreeSet<Building> buildings) {
+//        this.buildings = buildings;
+//    }
 
-    public void setBuildings(TreeSet<Building> buildings) {
-        this.buildings = buildings;
-    }
+//    private TreeSet<Building> buildings;
 
-    private TreeSet<Building> buildings;
-
-
-
-
-
-    public Set<Floor> getFloors() {
+    public TreeSet<Floor> getFloors() {
         return floors;
     }
 
-    public void setFloors(Set<Floor> floors) {
+    public void setFloors(TreeSet<Floor> floors) {
         this.floors = floors;
     }
 

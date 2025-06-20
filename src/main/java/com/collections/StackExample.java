@@ -10,9 +10,6 @@ public class StackExample {
         books.add("Ponniyen Selvan");
         System.out.println(books.pop());
 
-
-
-
         System.out.println(books);
     }
 }

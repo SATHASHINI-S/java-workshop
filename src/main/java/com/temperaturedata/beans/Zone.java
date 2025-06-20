@@ -4,6 +4,14 @@ import java.util.List;
 import java.util.Set;
 
 public class Zone {
+    private List<Sensor> sensor;
+    private String name;
+    private int zoneNumber;
+    private int noOfZone;
+    private int noOfSensor;
+    private String type;
+
+
     public String getName() {
         return name;
     }
@@ -44,18 +52,8 @@ public class Zone {
         this.type = type;
     }
 
-    public List<Zone> getZones() {
-        return zones;
-    }
 
-    public void setZones(List<Zone> zones) {
-        this.zones = zones;
-    }
 
-    private List<Zone> zones;
-    private String name;
-    private int zoneNumber;
-    private int noOfZone;
-    private int noOfSensor;
-    private String type;
+
+
 }

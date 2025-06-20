@@ -2,8 +2,22 @@ package com.temperaturedata.beans;
 
 import com.exception.TemperatureRangeException;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Map;
+
 public class Temperature_sensor implements Sensor{
     private float temp;
+
+    public Map<LocalDateTime, Temperature> getTemperatureMap() {
+        return temperatureMap;
+    }
+
+    public void setTemperatureMap(Map<LocalDateTime, Temperature> temperatureMap) {
+        this.temperatureMap = temperatureMap;
+    }
+
+    private Map<LocalDateTime ,Temperature> temperatureMap;
 
 
     public Temperature_sensor(float atemp) throws TemperatureRangeException {

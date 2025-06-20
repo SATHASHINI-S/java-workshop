@@ -12,6 +12,8 @@ public class Organization implements Serializable {
     private LocalDate dateOfInitiation;
     private String email;
     private String phone;
+    private String ceo;
+    private List<Location> locations;
 
     public List<Location> getLocations() {
         return locations;
@@ -21,8 +23,7 @@ public class Organization implements Serializable {
         this.locations = locations;
     }
 
-    private String ceo;
-    private List<Location> locations;
+
 
     public String getName() {
         return name;

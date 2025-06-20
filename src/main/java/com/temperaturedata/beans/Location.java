@@ -6,6 +6,18 @@ import java.util.Set;
 
 public class Location implements Serializable {
 
+    private Set<Building> buildings;
+    private String doorNo;
+    private String street;
+    private String area;
+    private String city;
+    private String district;
+    private String state;
+    private String pincode;
+    private String country;
+    private double longtitute;
+    private double latitute;
+
 
     public String getDoorNo() {
         return doorNo;
@@ -91,28 +103,11 @@ public class Location implements Serializable {
         return buildings;
     }
 
-//    public void setBuildings(List<Building> buildings) {
-//        this.buildings = buildings;
-//    }
+
 
     public void setBuildings(Set<Building> buildings) {
         this.buildings = buildings;
     }
-
-    private Set<Building> buildings;
-    private String doorNo;
-    private String street;
-    private String area;
-    private String city;
-    private String district;
-    private String state;
-    private String pincode;
-    private String country;
-    private double longtitute;
-    private double latitute;
-
-
-
 
 
 }

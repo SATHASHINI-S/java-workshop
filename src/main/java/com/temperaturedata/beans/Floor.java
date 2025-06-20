@@ -36,15 +36,15 @@ public class Floor {
         this.floorNumber = floorNumber;
     }
 
-    public List<Zone> getZones() {
+    public Set<Zone> getZones() {
         return zones;
     }
 
-    public void setZones(List<Zone> zones) {
+    public void setZones(Set<Zone> zones) {
         this.zones = zones;
     }
 
-    private List<Zone> zones;
+    private Set<Zone> zones;
 
     private List<Sensor> sensors;
     private String name;

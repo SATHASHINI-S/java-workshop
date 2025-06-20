@@ -11,7 +11,7 @@ import java.util.*;
 public class TemperatureClass {
     public static void main(String[] args) {
 
-//      Organization must be in List
+
 
         Location chennai = createLocation("4/2","North Street","Thambaram","Chennai","Chennai","Tamil Nadu","611100","India");
         Location cbe = createLocation("001","MGR STREET","SARAVANAMPATI","COIMBATORE","CBE","Tamil Nadu", "621114","India");
@@ -21,29 +21,23 @@ public class TemperatureClass {
         Organization organization = new Organization();
         organization.setLocations(noOfObject);
 
-//      Building should be in TreeSet
+
 
         Commercial navigator = createComercial("WhiteGlass","Butterfly","Navigator",001,12);
         Commercial creator = createComercial("LiteShadeOfBrown","Rectangle","Creator",02,16);
         Commercial inventor = createComercial("WhiteGlass","Butterfly","Navigator",001,12);
         Commercial innovator = createComercial("LiteShadeOfBrown","Rectangle","Creator",02,16);
 
-//        Set<Building> noOfCommercial = new HashSet<>();
-//        TreeSet<Building> noOfCommercial = new TreeSet<>(Comparator.comparing(navigator,creator));
+        Set<Building> noOfCommercial = Set.of(navigator,creator);
 //        noOfCommercial.add(navigator);
 //        noOfCommercial.add(creator);
-        TreeSet<Building> noOfCommercial = new TreeSet<>(Comparator.comparing(Building::getName));
-        noOfCommercial.add(navigator);
-        noOfCommercial.add(creator);
         chennai.setBuildings(noOfCommercial);
         chennai.setBuildings(noOfCommercial);
 
-//        Set<Building> noOfCbe = new HashSet<>();
-//        TreeSet<Building> noOfCbe = new TreeSet<>(Set.of(inventor,innovator)) ;
+
+        Set<Building> noOfCbe = Set.of(inventor,innovator) ;
 //        noOfCbe.add(inventor);
 //        noOfCbe.add(innovator);
-        TreeSet<Building> noOfCbe = new TreeSet<>(Comparator.comparing(Building::getName));
-        noOfCbe.addAll(Set.of(inventor, innovator));
         cbe.setBuildings(noOfCbe);
         cbe.setBuildings(noOfCbe);
 
@@ -52,18 +46,19 @@ public class TemperatureClass {
         Floor newfloor = floor(1,"floor 1");
         Floor secondFloor = floor(2,"floor 2");
 
-        Set<Floor> floors = Set.of(newfloor,secondFloor);
+        TreeSet<Floor> floors = new TreeSet<>(Comparator.comparing(Floor::getFloorNumber));
         creator.setFloors(floors);
 
 
         Zone newZoneOne = zoneValue("Technical Zone",001,3,9,"Working");
         Zone newZoneTwo = zoneValue("Management Zone",002,3,9,"Working");
         Zone newZoneThree = zoneValue("Production Zone",003,3,9,"Working");
-        List<Zone> zoneList = new ArrayList<>();
-        zoneList.add(newZoneOne);
-        zoneList.add(newZoneTwo);
-        zoneList.add(newZoneThree);
+        Set<Zone> zoneList = Set.of(newZoneOne,newZoneTwo,newZoneThree);
+//        zoneList.add(newZoneOne);
+//        zoneList.add(newZoneTwo);
+//        zoneList.add(newZoneThree);
         newfloor.setZones(zoneList);
+        secondFloor.setZones(zoneList);
 
 
     }
