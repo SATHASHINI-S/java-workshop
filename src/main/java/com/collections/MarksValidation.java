@@ -13,6 +13,7 @@ public class MarksValidation {
         marks.add(96);
         marks.add(85);
         marks.add(35);
+        System.out.println(marks);
         Collections.sort(marks);
         System.out.println(marks);
         Collections.sort(marks,Comparator.reverseOrder());

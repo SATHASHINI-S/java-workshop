@@ -1,9 +1,6 @@
 package com.collections;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 public class BasicCollections {
     public static void main(String[] args) {
@@ -20,6 +17,8 @@ public class BasicCollections {
         List<String> addNames = new Vector<>();
         addNames.add("Sathashini");
         names.addAll(addNames);
+
+
 
         System.out.println(names.subList(0,2));
 
