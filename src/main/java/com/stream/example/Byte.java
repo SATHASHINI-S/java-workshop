@@ -1,16 +1,14 @@
 package com.stream.example;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class Byte {
 
         public static void main(String[] args) {
             String filePath = "sample.txt";
-
-            // Basic InputStream (FileInputStream)
+//            File file = new File("sample.txt");
+//
+//             Basic InputStream (FileInputStream)
             try (InputStream inputStream = new FileInputStream(filePath)) {
                 System.out.println("Reading with InputStream:");
                 int data;
