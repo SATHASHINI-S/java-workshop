@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 public final class Commercial extends Building{
     private String type;
+
     private Calendar openTime;
     private Calendar closeTime;
 
