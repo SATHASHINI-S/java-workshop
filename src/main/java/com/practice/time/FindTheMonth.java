@@ -1,4 +1,4 @@
-package com.homeworks.time;
+package com.practice.time;
 
 import java.time.YearMonth;
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-package com.controlflow;
+package com.practice.controlflow;
 
 public class ControlFlow {
     public void flowcontrol (int number){

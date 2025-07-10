@@ -1,4 +1,4 @@
-package com.cal;
+package com.practice.cal;
 
 import java.util.Scanner;
 

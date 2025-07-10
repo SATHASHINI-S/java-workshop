@@ -1,6 +1,6 @@
 package com.myjava.practice.lamdaInterface;
 
-import com.lamdaInterface.Arithmetic;
+import com.practice.lamdaInterface.Arithmetic;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

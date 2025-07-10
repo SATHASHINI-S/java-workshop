@@ -1,4 +1,4 @@
-package com.avg;
+package com.practice.avg;
 
 import java.util.Scanner;
 

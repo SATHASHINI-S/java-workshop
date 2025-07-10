@@ -1,4 +1,4 @@
-package com.finding;
+package com.practice.finding;
 
 import java.util.Scanner;
 

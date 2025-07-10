@@ -1,4 +1,4 @@
-package com.basics;
+package com.practice.basics;
 
 public class Hello {
     public static void main(String[] args) {

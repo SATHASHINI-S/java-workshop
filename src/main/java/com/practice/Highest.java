@@ -1,4 +1,4 @@
-package com.highest;
+package com.practice;
 
 import java.util.Scanner;
 
