@@ -8,9 +8,10 @@ public class StaticMethod {
     }
 
     public static void main(String[] args) {
-//        StaticMethod staticMethod = new StaticMethod();
-//        staticMethod.example();
+        StaticMethod staticMethod = new StaticMethod();
+        staticMethod.example();
         System.out.println(counter);
 
     }
+
 }
