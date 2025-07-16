@@ -20,8 +20,10 @@ public class BuildingDaoTest {
         try(Connection connection = jdbcDataSource.getConnection();
             Statement statement = connection.createStatement()) {
             statement.execute("""
-                     CREATE TABLE building(colour VARCHAR(255), 
-                     shape VARCHAR(255), String name VARCHAR(255), 
+                     CREATE TABLE building(
+                     id INT AUTO_INCREMENT PRIMARY KEY,
+                     colour VARCHAR(255), 
+                     shape VARCHAR(255), name VARCHAR(255), 
                      bulidingNumber INT, 
                      noOfFloors INT ,height DOUBLE)
         """);
@@ -32,9 +34,20 @@ public class BuildingDaoTest {
     }
 
     @Test
-    void testSave(){
-        Building building = buildingDao.save(new Building("Blue","Circle","IT Park",001,25,222.3);
+    public void testSave() throws SQLException {
+        Building building = buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
         Assertions.assertEquals("Blue",building.colour(),"Insert Failed");
 
+        Building update = buildingDao.save(new Building(building.id(), "Light Blue", building.shape(), building.name(), building.bulidingNumber(),building.noOfFloors(), building.height()));
+        Assertions.assertEquals(update.id(),building.id());
+        Assertions.assertEquals("Light Blue",update.colour(),"Not updated");
+
     }
+    @Test
+    public void testFindAll(){
+
+
+    }
+
+
 }
