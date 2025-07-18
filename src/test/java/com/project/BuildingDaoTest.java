@@ -10,6 +10,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class BuildingDaoTest {
     private final BuildingDao buildingDao;
 
@@ -36,17 +39,53 @@ public class BuildingDaoTest {
     @Test
     public void testSave() throws SQLException {
         Building building = buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
-        Assertions.assertEquals("Blue",building.colour(),"Insert Failed");
+        assertEquals("Blue",building.colour(),"Insert Failed");
 
         Building update = buildingDao.save(new Building(building.id(), "Light Blue", building.shape(), building.name(), building.bulidingNumber(),building.noOfFloors(), building.height()));
-        Assertions.assertEquals(update.id(),building.id());
-        Assertions.assertEquals("Light Blue",update.colour(),"Not updated");
+        assertEquals(update.id(),building.id());
+        assertEquals("Light Blue",update.colour(),"Not updated");
 
     }
     @Test
-    public void testFindAll(){
+    public void testFindAll() throws SQLException {
+        buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
+        buildingDao.save(new Building(null,"Blue","Circle","IT Park",002,26,221.3));
+        var buildingCount = buildingDao.findAll();
+        assertEquals(2,buildingCount.size());
 
+    }
 
+    @Test
+    public void testFindById() throws SQLException {
+        var buildings = buildingDao.save(new Building(null,"Blue","Circle","IT Park",002,26,221.3));
+        var result = buildingDao.findById(buildings.id());
+        Assertions.assertTrue(result.isPresent());
+        assertEquals("Blue",result.get().colour());
+    }
+
+    @Test
+    public void testDeleteAll() throws SQLException {
+        buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
+        buildingDao.save(new Building(null,"Blue","Circle","IT Park",002,26,221.3));
+        buildingDao.deleteAll();
+        assertEquals(0,buildingDao.count());
+    }
+
+    @Test
+    public void testCount() throws SQLException {
+        buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
+        buildingDao.save(new Building(null,"Blue","Circle","IT Park",002,26,221.3));
+        assertEquals(2,buildingDao.count());
+
+    }
+
+    @Test
+    public void testDeleteById() throws SQLException {
+        var building = buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
+        buildingDao.deleteById(building.id());
+        assertTrue(buildingDao.findById(building.id()).isEmpty());
+
+        
     }
 
 
