@@ -4,6 +4,12 @@ import java.util.List;
 import java.util.Set;
 
 public class Floor {
+    private Set<Zone> zones;
+    private List<Sensor> sensors;
+    private String name;
+    private int noOfZone;
+    private int floorNumber;
+
     public List<Sensor> getSensors() {
         return sensors;
     }
@@ -44,11 +50,6 @@ public class Floor {
         this.zones = zones;
     }
 
-    private Set<Zone> zones;
 
-    private List<Sensor> sensors;
-    private String name;
-    private int noOfZone;
-    private int floorNumber;
 
 }
