@@ -15,4 +15,13 @@ public class AddingItem {
         System.out.println(listArray);
 
      }
+
+    @Benchmark
+    public List<Integer> benchmarkAddItems() {
+        List<Integer> listArray = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            listArray.add(i);
+        }
+        return listArray;
+    }
 }

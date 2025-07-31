@@ -76,7 +76,6 @@ public class BuildingDaoTest {
         buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
         buildingDao.save(new Building(null,"Blue","Circle","IT Park",002,26,221.3));
         assertEquals(2,buildingDao.count());
-
     }
 
     @Test
