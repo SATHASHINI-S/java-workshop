@@ -1,18 +1,20 @@
 package com.temperaturedata;
 
-import com.project.Dao.OrganizationDao;
-import com.project.Dao.Org_LocationDao;
-import com.project.model.Org_Location;
-import com.project.model.Organization;
-import org.h2.jdbcx.JdbcDataSource;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.h2.jdbcx.JdbcDataSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import com.temperaturedata.Dao.Org_LocationDao;
+import com.temperaturedata.Dao.OrganizationDao;
+import com.temperaturedata.model.Org_Location;
+import com.temperaturedata.model.Organization;
 
 public class OrganizationLocationIntegrationTest {
     private static OrganizationDao organizationDao;
