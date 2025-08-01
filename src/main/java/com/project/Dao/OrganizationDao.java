@@ -4,12 +4,8 @@ import com.project.model.Organization;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class OrganizationDao {
-
     private final DataSource dataSource;
 
     public OrganizationDao(DataSource dataSource) {
@@ -17,113 +13,35 @@ public class OrganizationDao {
     }
 
     public Organization save(Organization org) {
-        try (Connection conn = dataSource.getConnection()) {
-            if (org.id() == null) {
-                String sql = "INSERT INTO organization(name, certificateid, type, email, phone, ceo) VALUES (?, ?, ?, ?, ?, ?)";
-                PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, org.name());
-                ps.setString(2, org.certificateid());
-                ps.setString(3, org.type());
-                ps.setString(4, org.email());
-                ps.setString(5, org.phone());
-                ps.setString(6, org.ceo());
-                ps.executeUpdate();
-
-                ResultSet keys = ps.getGeneratedKeys();
-                if (keys.next()) {
-                    return new Organization(keys.getInt(1), org.name(), org.certificateid(), org.type(), org.email(), org.phone(), org.ceo());
-                }
-                return null;
-            } else {
-                String sql = "UPDATE organization SET name=?, certificateid=?, type=?, email=?, phone=?, ceo=? WHERE id=?";
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setString(1, org.name());
-                ps.setString(2, org.certificateid());
-                ps.setString(3, org.type());
-                ps.setString(4, org.email());
-                ps.setString(5, org.phone());
-                ps.setString(6, org.ceo());
-                ps.setInt(7, org.id());
-                ps.executeUpdate();
-                return org;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Optional<Organization> findById(int id) {
-        try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM organization WHERE id = ?");
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return Optional.of(new Organization(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("certificateid"),
-                        rs.getString("type"),
-                        rs.getString("email"),
-                        rs.getString("phone"),
-                        rs.getString("ceo")
-                ));
-            }
-            return Optional.empty();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public List<Organization> findAll() {
-        try (Connection conn = dataSource.getConnection()) {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM organization");
-
-            List<Organization> list = new ArrayList<>();
-            while (rs.next()) {
-                list.add(new Organization(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("certificateid"),
-                        rs.getString("type"),
-                        rs.getString("email"),
-                        rs.getString("phone"),
-                        rs.getString("ceo")
-                ));
-            }
-            return list;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public long count() {
+        String sql = "INSERT INTO organization (name, contactNo, email, website) VALUES (?, ?, ?, ?)";
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM organization")) {
-            rs.next();
-            return rs.getLong(1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void deleteById(int id) {
-        try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM organization WHERE id = ?");
-            ps.setInt(1, id);
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, org.name());
+            ps.setString(2, org.contactno());
+            ps.setString(3, org.email());
+            ps.setString(4, org.website());
             ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return new Organization(
+                            org.name(), org.contactno(), org.email(), org.website(), rs.getInt(1));
+                }
+            }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error saving organization", e);
         }
+        return null;
     }
 
-    public void deleteAll() {
+    public int count() {
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate("DELETE FROM organization");
+             PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM organization");
+             ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getInt(1);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error counting organizations", e);
         }
     }
 }

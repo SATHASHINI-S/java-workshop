@@ -16,35 +16,54 @@ public class BuildingDao {
     }
 
     public Building save(Building building) throws SQLException {
-        if(building.id() == null) {
-            final String insertSql = "INSERT INTO building (colour, shape, name, bulidingNumber, noOfFloors ,height) VALUES(?,?,?,?,?,?)";
-            try (Connection connection = dataSource.getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
-                preparedStatement.setString(1, building.colour());
-                preparedStatement.setString(2, building.shape());
-                preparedStatement.setString(3, building.name());
-                preparedStatement.setInt(4, building.bulidingNumber());
-                preparedStatement.setInt(5, building.noOfFloors());
-                preparedStatement.setDouble(6, building.height());
-                preparedStatement.execute();
-                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                    if (resultSet.next()) {
-                        return new Building(resultSet.getInt(1), building.colour(), building.shape(), building.name(), building.bulidingNumber(),
-                                building.noOfFloors(), building.height());
+        if (building.building_id() == null) {
+            final String insertSql = """
+                INSERT INTO building (buildingname, latitude, longtitude, height, area, location_id)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """;
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
+
+                ps.setString(1, building.buildingname());
+                ps.setString(2, building.latitude());
+                ps.setString(3, building.longtitude());
+                ps.setInt(4, building.height());
+                ps.setInt(5, building.area());
+                ps.setInt(6, building.location_id());
+
+                ps.executeUpdate();
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return new Building(
+                                building.buildingname(),
+                                building.latitude(),
+                                building.longtitude(),
+                                building.height(),
+                                building.area(),
+                                building.location_id(),
+                                rs.getInt(1)
+                        );
                     }
                 }
             }
+        } else {
+            final String updateSql = """
+                UPDATE building SET buildingname = ?, latitude = ?, longtitude = ?, height = ?, area = ?, location_id = ?
+                WHERE building_id = ?
+            """;
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(updateSql)) {
 
+                ps.setString(1, building.buildingname());
+                ps.setString(2, building.latitude());
+                ps.setString(3, building.longtitude());
+                ps.setInt(4, building.height());
+                ps.setInt(5, building.area());
+                ps.setInt(6, building.location_id());
+                ps.setInt(7, building.building_id());
 
-
-        }
-        else{
-            final String updateSql = "UPDATE building SET colour WHERE id = ?";
-            try(Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(updateSql)){
-                preparedStatement.setInt(1,building.id());
-                preparedStatement.executeUpdate();
-                return new Building(building.id(), building.colour(), building.shape(), building.name(), building.bulidingNumber(), building.noOfFloors(), building.height());
+                ps.executeUpdate();
+                return building;
             }
         }
 
@@ -52,82 +71,73 @@ public class BuildingDao {
     }
 
     public List<Building> findAll() throws SQLException {
-        final String findSql = "SELECT id, colour, shape, name, bulidingNumber, noOfFloors, height FROM building";
-        List<Building> listBuilding = new ArrayList<>();
-        try(Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(findSql);
-        ResultSet resultSet = preparedStatement.executeQuery()){
-            while(resultSet.next()){
-                listBuilding.add(new Building(
-                        resultSet.getInt("id"),
-                        resultSet.getString("colour"),
-                        resultSet.getString("shape"),
-                        resultSet.getString("name"),
-                        resultSet.getInt("bulidingNumber"),
-                        resultSet.getInt("noOfFloors"),
-                        resultSet.getDouble("height")
+        final String sql = "SELECT * FROM building";
+        List<Building> buildings = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
+            while (rs.next()) {
+                buildings.add(new Building(
+                        rs.getString("buildingname"),
+                        rs.getString("latitude"),
+                        rs.getString("longtitude"),
+                        rs.getInt("height"),
+                        rs.getInt("area"),
+                        rs.getInt("location_id"),
+                        rs.getInt("building_id")
                 ));
             }
-
-
         }
-
-        return listBuilding;
+        return buildings;
     }
 
-    public Optional<Building> findById(final int id) throws SQLException {
-        final String findSqll = "SELECT id, colour, shape, name, bulidingNumber, noOfFloors, height FROM building WHERE id = ?";
-        try(Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(findSqll)){
-            preparedStatement.setInt(1,id);
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                if(resultSet.next()){
+    public Optional<Building> findById(int id) throws SQLException {
+        final String sql = "SELECT * FROM building WHERE building_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
                     return Optional.of(new Building(
-                            resultSet.getInt("id"),
-                            resultSet.getString("colour"),
-                            resultSet.getString("shape"),
-                            resultSet.getString("name"),
-                            resultSet.getInt("bulidingNumber"),
-                            resultSet.getInt("noOfFloors"),
-                            resultSet.getDouble("height")
+                            rs.getString("buildingname"),
+                            rs.getString("latitude"),
+                            rs.getString("longtitude"),
+                            rs.getInt("height"),
+                            rs.getInt("area"),
+                            rs.getInt("location_id"),
+                            rs.getInt("building_id")
                     ));
-
                 }
             }
         }
         return Optional.empty();
     }
 
+    public void deleteById(int id) throws SQLException {
+        final String sql = "DELETE FROM building WHERE building_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+
     public void deleteAll() throws SQLException {
-        final String deleteAll = "DELETE FROM building";
-        try(Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(deleteAll)){
-            preparedStatement.executeUpdate();
+        final String sql = "DELETE FROM building";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.executeUpdate();
         }
     }
 
     public long count() throws SQLException {
-        final String countSql = "SELECT COUNT(*) FROM building";
-        try(Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(countSql);
-        ResultSet resultSet = preparedStatement.executeQuery()){
-            if(resultSet.next()){
-                return resultSet.getLong(1);
-            }
-
-
+        final String sql = "SELECT COUNT(*) FROM building";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getLong(1);
         }
         return 0;
-    }
-
-    public void deleteById(final int id) throws SQLException {
-        final String deleteBySql = "DELETE FROM building WHERE id = ?";
-        try(Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(deleteBySql)){
-            preparedStatement.setInt(1,id);
-            preparedStatement.execute();
-        }
-
     }
 }

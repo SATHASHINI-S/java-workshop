@@ -15,119 +15,118 @@ public class FloorDao {
         this.dataSource = dataSource;
     }
 
-    public Floor save(Floor floor) {
-        try (Connection connection = dataSource.getConnection()) {
-            if (floor.id() == null) {
-                final String insertSql = "INSERT INTO floor(name, noOfZone, floorNumber, buildingId) VALUES (?, ?, ?, ?)";
-                try (PreparedStatement ps = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
-                    ps.setString(1, floor.name());
-                    ps.setInt(2, floor.noOfZone());
-                    ps.setInt(3, floor.floorNumber());
-                    ps.setInt(4, floor.buildingId());
+    public Floor save(Floor floor) throws SQLException {
+        if (floor.floor_id() == null) {
+            final String insertSql = """
+                INSERT INTO floor (name, noOfZone, building_id, floor_no)
+                VALUES (?, ?, ?, ?)
+            """;
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
 
-                    ps.executeUpdate();
-                    try (ResultSet rs = ps.getGeneratedKeys()) {
-                        if (rs.next()) {
-                            return new Floor(rs.getInt(1), floor.name(), floor.noOfZone(), floor.floorNumber(), floor.buildingId());
-                        }
+                ps.setString(1, floor.name());
+                ps.setInt(2, floor.noOfZone());
+                ps.setInt(3, floor.building_id());
+                ps.setInt(4, floor.floor_no());
+
+                ps.executeUpdate();
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return new Floor(
+                                floor.name(),
+                                floor.noOfZone(),
+                                rs.getInt(1),
+                                floor.building_id(),
+                                floor.floor_no()
+                        );
                     }
                 }
-            } else {
-                final String updateSql = "UPDATE floor SET name = ?, noOfZone = ?, floorNumber = ?, buildingId = ? WHERE id = ?";
-                try (PreparedStatement ps = connection.prepareStatement(updateSql)) {
-                    ps.setString(1, floor.name());
-                    ps.setInt(2, floor.noOfZone());
-                    ps.setInt(3, floor.floorNumber());
-                    ps.setInt(4, floor.buildingId());
-                    ps.setInt(5, floor.id());
-
-                    ps.executeUpdate();
-                    return floor;
-                }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error saving floor: " + e.getMessage(), e);
+        } else {
+            final String updateSql = """
+                UPDATE floor SET name = ?, noOfZone = ?, building_id = ?, floor_no = ?
+                WHERE floor_id = ?
+            """;
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(updateSql)) {
+
+                ps.setString(1, floor.name());
+                ps.setInt(2, floor.noOfZone());
+                ps.setInt(3, floor.building_id());
+                ps.setInt(4, floor.floor_no());
+                ps.setInt(5, floor.floor_id());
+
+                ps.executeUpdate();
+                return floor;
+            }
         }
-        return null;
+
+        return floor;
     }
 
-    public Optional<Floor> findById(int id) {
-        final String sql = "SELECT * FROM floor WHERE id = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(new Floor(
-                            rs.getInt("id"),
-                            rs.getString("name"),
-                            rs.getInt("noOfZone"),
-                            rs.getInt("floorNumber"),
-                            rs.getInt("buildingId")
-                    ));
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error finding floor by ID", e);
-        }
-        return Optional.empty();
-    }
-
-    public List<Floor> findAll() {
-        List<Floor> floors = new ArrayList<>();
+    public List<Floor> findAll() throws SQLException {
         final String sql = "SELECT * FROM floor";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql);
+        List<Floor> floors = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 floors.add(new Floor(
-                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("noOfZone"),
-                        rs.getInt("floorNumber"),
-                        rs.getInt("buildingId")
+                        rs.getInt("floor_id"),
+                        rs.getInt("building_id"),
+                        rs.getInt("floor_no")
                 ));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error finding all floors", e);
         }
         return floors;
     }
 
-    public void deleteById(int id) {
-        final String sql = "DELETE FROM floor WHERE id = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+    public Optional<Floor> findById(int id) throws SQLException {
+        final String sql = "SELECT * FROM floor WHERE floor_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(new Floor(
+                            rs.getString("name"),
+                            rs.getInt("noOfZone"),
+                            rs.getInt("floor_id"),
+                            rs.getInt("building_id"),
+                            rs.getInt("floor_no")
+                    ));
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    public void deleteById(int id) throws SQLException {
+        final String sql = "DELETE FROM floor WHERE floor_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error deleting floor by ID", e);
         }
     }
 
-    public void deleteAll() {
+    public void deleteAll() throws SQLException {
         final String sql = "DELETE FROM floor";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error deleting all floors", e);
         }
     }
 
-    public long count() {
+    public long count() throws SQLException {
         final String sql = "SELECT COUNT(*) FROM floor";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getLong(1);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error counting floors", e);
+            if (rs.next()) return rs.getLong(1);
         }
         return 0;
     }

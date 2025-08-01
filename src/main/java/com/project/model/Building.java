@@ -1,4 +1,4 @@
 package com.project.model;
 
-public record Building( Integer id, String colour, String shape, String name, Integer bulidingNumber, Integer noOfFloors ,Double height) {
+public record Building( String buildingname, String latitude, String longtitude, Integer height, Integer area, Integer location_id, Integer building_id) {
 }

@@ -1,6 +1,6 @@
 package com.project.model;
 
 
-public record Floor(Integer id, String name, Integer noOfZone, Integer floorNumber,Integer buildingId) {
+public record Floor(String name, Integer noOfZone, Integer floor_id, Integer building_id, Integer floor_no) {
 
 }

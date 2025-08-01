@@ -3,7 +3,7 @@ package com.project;
 import com.project.Dao.FloorDao;
 import com.project.model.Floor;
 import org.h2.jdbcx.JdbcDataSource;
-import org.junit.jupiter.api.*;
+import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,104 +12,82 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FloorDaoTest {
+    private final FloorDao floorDao;
 
-    private static FloorDao floorDao;
+    public FloorDaoTest() throws SQLException {
+        JdbcDataSource ds = new JdbcDataSource();
+        ds.setURL("jdbc:h2:mem:" + System.nanoTime() + ";DB_CLOSE_DELAY=-1");
+        ds.setUser("satha");
 
-    @BeforeAll
-    static void setup() throws SQLException {
-        JdbcDataSource jdbcDataSource = new JdbcDataSource();
-        jdbcDataSource.setURL("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
-        jdbcDataSource.setUser("satha");
+        try (Connection conn = ds.getConnection();
+             Statement stmt = conn.createStatement()) {
 
-        try (Connection connection = jdbcDataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-
-            // Create building table
-            statement.execute("""
-                CREATE TABLE building(
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(255)
-                )
+            stmt.execute("""
+                CREATE TABLE building (
+                    building_id INT PRIMARY KEY
+                );
             """);
 
-            // Create floor table
-            statement.execute("""
-                CREATE TABLE floor(
-                    id INT AUTO_INCREMENT PRIMARY KEY,
+            stmt.execute("""
+                CREATE TABLE floor (
+                    floor_id INT AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(255),
                     noOfZone INT,
-                    floorNumber INT,
-                    buildingId INT,
-                    FOREIGN KEY(buildingId) REFERENCES building(id)
-                )
+                    building_id INT,
+                    floor_no INT,
+                    FOREIGN KEY (building_id) REFERENCES building(building_id)
+                );
             """);
 
-            // Insert a test building with id=1
-            statement.execute("INSERT INTO building(name) VALUES ('Main Building')");
+            // Insert one building for FK reference
+            stmt.execute("INSERT INTO building(building_id) VALUES (201)");
         }
 
-        floorDao = new FloorDao(jdbcDataSource);
+        floorDao = new FloorDao(ds);
     }
 
     @Test
-    @Order(1)
-    void testSave() {
-        Floor floor = floorDao.save(new Floor(null, "Production", 3, 2, 1));
-        assertNotNull(floor.id(), "Floor was not saved (ID is null)");
-        assertEquals("Production", floor.name());
+    public void testSaveAndUpdate() throws SQLException {
+        var saved = floorDao.save(new Floor("Ground", 2, null, 201, 0));
+        assertNotNull(saved.floor_id());
+
+        var updated = floorDao.save(new Floor("First", 3, saved.floor_id(), 201, 1));
+        assertEquals(saved.floor_id(), updated.floor_id());
+        assertEquals("First", updated.name());
     }
 
     @Test
-    @Order(2)
-    void testUpdate() {
-        Floor floor = floorDao.save(new Floor(null, "QA", 2, 1, 1));
-        Floor updated = floorDao.save(new Floor(floor.id(), "Testing", 5, 3, 1));
+    public void testFindAll() throws SQLException {
+        floorDao.deleteAll();
+        floorDao.save(new Floor("F1", 3, null, 201, 1));
+        floorDao.save(new Floor("F2", 4, null, 201, 2));
 
-        assertEquals(floor.id(), updated.id());
-        assertEquals("Testing", updated.name());
-        assertEquals(5, updated.noOfZone());
+        List<Floor> all = floorDao.findAll();
+        assertEquals(2, all.size());
     }
 
     @Test
-    @Order(3)
-    void testFindById() {
-        Floor saved = floorDao.save(new Floor(null, "Support", 1, 1, 1));
-        var result = floorDao.findById(saved.id());
-
-        assertTrue(result.isPresent());
-        assertEquals("Support", result.get().name());
+    public void testFindById() throws SQLException {
+        var floor = floorDao.save(new Floor("F-Search", 2, null, 201, 1));
+        var found = floorDao.findById(floor.floor_id());
+        assertTrue(found.isPresent());
+        assertEquals("F-Search", found.get().name());
     }
 
     @Test
-    @Order(4)
-    void testFindAll() {
-        floorDao.save(new Floor(null, "Dev", 2, 2, 1));
-        floorDao.save(new Floor(null, "Admin", 1, 0, 1));
-
-        List<Floor> allFloors = floorDao.findAll();
-        assertTrue(allFloors.size() >= 2);
+    public void testDeleteById() throws SQLException {
+        var floor = floorDao.save(new Floor("Temp", 1, null, 201, 0));
+        floorDao.deleteById(floor.floor_id());
+        assertTrue(floorDao.findById(floor.floor_id()).isEmpty());
     }
 
     @Test
-    @Order(5)
-    void testCount() {
-        long count = floorDao.count();
-        assertTrue(count >= 1);
-    }
+    public void testDeleteAllAndCount() throws SQLException {
+        floorDao.save(new Floor("T1", 2, null, 201, 1));
+        floorDao.save(new Floor("T2", 3, null, 201, 2));
+        assertEquals(2, floorDao.count());
 
-    @Test
-    @Order(6)
-    void testDeleteById() {
-        Floor floor = floorDao.save(new Floor(null, "Temp", 1, 1, 1));
-        floorDao.deleteById(floor.id());
-        assertTrue(floorDao.findById(floor.id()).isEmpty());
-    }
-
-    @Test
-    @Order(7)
-    void testDeleteAll() {
         floorDao.deleteAll();
         assertEquals(0, floorDao.count());
     }

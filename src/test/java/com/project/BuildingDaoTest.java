@@ -4,88 +4,92 @@ import com.project.Dao.BuildingDao;
 import com.project.model.Building;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BuildingDaoTest {
     private final BuildingDao buildingDao;
 
     public BuildingDaoTest() throws SQLException {
-        JdbcDataSource jdbcDataSource = new JdbcDataSource();
-        jdbcDataSource.setURL("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
-        jdbcDataSource.setUser("satha");
-        try(Connection connection = jdbcDataSource.getConnection();
-            Statement statement = connection.createStatement()) {
-            statement.execute("""
-                     CREATE TABLE building(
-                     id INT AUTO_INCREMENT PRIMARY KEY,
-                     colour VARCHAR(255), 
-                     shape VARCHAR(255), name VARCHAR(255), 
-                     bulidingNumber INT, 
-                     noOfFloors INT ,height DOUBLE)
-        """);
+        JdbcDataSource ds = new JdbcDataSource();
+        ds.setURL("jdbc:h2:mem:" + System.nanoTime() + ";DB_CLOSE_DELAY=-1");
+        ds.setUser("satha");
 
+        try (Connection conn = ds.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("""
+                CREATE TABLE location (
+                    location_id INT PRIMARY KEY
+                );
+            """);
+
+            stmt.execute("""
+                CREATE TABLE building (
+                    building_id INT AUTO_INCREMENT PRIMARY KEY,
+                    buildingname VARCHAR(255),
+                    latitude VARCHAR(255),
+                    longtitude VARCHAR(255),
+                    height INT,
+                    area INT,
+                    location_id INT,
+                    FOREIGN KEY (location_id) REFERENCES location(location_id)
+                );
+            """);
+
+            // insert dummy location for foreign key
+            stmt.execute("INSERT INTO location(location_id) VALUES (101)");
         }
 
-        buildingDao = new BuildingDao(jdbcDataSource);
+        buildingDao = new BuildingDao(ds);
     }
 
     @Test
-    public void testSave() throws SQLException {
-        Building building = buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
-        assertEquals("Blue",building.colour(),"Insert Failed");
+    public void testSaveAndUpdate() throws SQLException {
+        var saved = buildingDao.save(new Building("Gurukul", "12.34", "56.78", 100, 2000, 101, null));
+        assertNotNull(saved.building_id());
 
-        Building update = buildingDao.save(new Building(building.id(), "Light Blue", building.shape(), building.name(), building.bulidingNumber(),building.noOfFloors(), building.height()));
-        assertEquals(update.id(),building.id());
-        assertEquals("Light Blue",update.colour(),"Not updated");
-
+        var updated = buildingDao.save(new Building("Gurukul Updated", "12.34", "56.78", 110, 2100, 101, saved.building_id()));
+        assertEquals(saved.building_id(), updated.building_id());
+        assertEquals("Gurukul Updated", updated.buildingname());
     }
+
     @Test
     public void testFindAll() throws SQLException {
-        buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
-        buildingDao.save(new Building(null,"Blue","Circle","IT Park",002,26,221.3));
-        var buildingCount = buildingDao.findAll();
-        assertEquals(2,buildingCount.size());
+        buildingDao.deleteAll();
+        buildingDao.save(new Building("B1", "1", "2", 10, 100, 101, null));
+        buildingDao.save(new Building("B2", "3", "4", 20, 200, 101, null));
 
+        List<Building> all = buildingDao.findAll();
+        assertEquals(2, all.size());
     }
 
     @Test
     public void testFindById() throws SQLException {
-        var buildings = buildingDao.save(new Building(null,"Blue","Circle","IT Park",002,26,221.3));
-        var result = buildingDao.findById(buildings.id());
-        Assertions.assertTrue(result.isPresent());
-        assertEquals("Blue",result.get().colour());
-    }
-
-    @Test
-    public void testDeleteAll() throws SQLException {
-        buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
-        buildingDao.save(new Building(null,"Blue","Circle","IT Park",002,26,221.3));
-        buildingDao.deleteAll();
-        assertEquals(0,buildingDao.count());
-    }
-
-    @Test
-    public void testCount() throws SQLException {
-        buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
-        buildingDao.save(new Building(null,"Blue","Circle","IT Park",002,26,221.3));
-        assertEquals(2,buildingDao.count());
+        var b = buildingDao.save(new Building("Unique", "0", "0", 1, 1, 101, null));
+        var found = buildingDao.findById(b.building_id());
+        assertTrue(found.isPresent());
+        assertEquals("Unique", found.get().buildingname());
     }
 
     @Test
     public void testDeleteById() throws SQLException {
-        var building = buildingDao.save(new Building(null,"Blue","Circle","IT Park",001,25,222.3));
-        buildingDao.deleteById(building.id());
-        assertTrue(buildingDao.findById(building.id()).isEmpty());
-
-        
+        var b = buildingDao.save(new Building("ToDelete", "0", "0", 1, 1, 101, null));
+        buildingDao.deleteById(b.building_id());
+        assertTrue(buildingDao.findById(b.building_id()).isEmpty());
     }
 
+    @Test
+    public void testDeleteAllAndCount() throws SQLException {
+        buildingDao.save(new Building("X", "x", "x", 1, 1, 101, null));
+        buildingDao.save(new Building("Y", "y", "y", 2, 2, 101, null));
+        assertEquals(2, buildingDao.count());
 
+        buildingDao.deleteAll();
+        assertEquals(0, buildingDao.count());
+    }
 }
