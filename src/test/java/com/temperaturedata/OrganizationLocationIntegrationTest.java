@@ -20,6 +20,7 @@ public class OrganizationLocationIntegrationTest {
     private static OrganizationDao organizationDao;
     private static Org_LocationDao orgLocationDao;
 
+    
     @BeforeAll
     static void setup() throws Exception {
         JdbcDataSource ds = new JdbcDataSource();
