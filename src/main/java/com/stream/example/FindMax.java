@@ -2,9 +2,6 @@ package com.stream.example;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FindMax {
     public static void main(String[] args) {
@@ -14,11 +11,12 @@ public class FindMax {
         System.out.println(numberMin);
         System.out.println(numberStream);
 
-//        Stream<Integer> numberStream = Arrays.stream(numbers);
-//        List<Integer> sorted = numberStream.sorted().collect(Collectors.toList());
-//        System.out.println(sorted.get(0));
-//        System.out.println(sorted.getLast());
-//        System.out.println(sorted);
+    //    Stream<Integer> numberStream = Arrays.stream(numbers);
+    //    List<Integer> sorted = numberStream.sorted().collect(Collectors.toList());
+    //    System.out.println(sorted.get(0));
+    //    System.out.println(sorted.getLast());
+    //    System.out.println(sorted);
+    //    System.out.println("abc");
 
 
     }
