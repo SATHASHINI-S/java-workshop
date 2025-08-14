@@ -18,7 +18,7 @@ public class Mrmiss {
                 System.out.println("Miss "+name[i]);
             }
             else{
-                System.out.println("Mr "+name[i]);
+                System.out.println("Mr  "+name[i]);
             }
         }
 
