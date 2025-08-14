@@ -17,6 +17,9 @@ public class Mrmiss {
             if(i%2 == 0){
                 System.out.println("Miss "+name[i]);
             }
+            else if(i%3 == 0){
+                System.out.println("Nothing");
+            }
             else{
                 System.out.println("Mr  "+name[i]);
             }
